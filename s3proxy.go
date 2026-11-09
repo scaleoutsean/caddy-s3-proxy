@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"html/template"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"path"
 	"path/filepath"
@@ -239,7 +238,7 @@ func (p S3Proxy) PutHandler(w http.ResponseWriter, r *http.Request, key string) 
 	// The request gives us r.Body a ReadCloser.  However, Put needs a ReadSeeker.
 	// So we need to read the entire object in memory and create the ReadSeeker.
 	// TODO: this will not work well for very large files - will run out of memory
-	buf, err := ioutil.ReadAll(r.Body)
+	buf, err := io.ReadAll(r.Body)
 	if err != nil {
 		return convertToCaddyError(err)
 	}

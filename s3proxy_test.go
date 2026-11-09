@@ -217,18 +217,18 @@ func setupTestBucket(t *testing.T, client *s3.S3) string {
 		if err != nil {
 			return err
 		}
-		defer file.Close()
-
-		if _, err := client.PutObject(&s3.PutObjectInput{
+		_, putErr := client.PutObject(&s3.PutObjectInput{
 			Bucket:      aws.String(bucketName),
 			Key:         aws.String(key),
 			ContentType: aws.String(contentType),
 			Body:        file,
-		}); err != nil {
-			return err
+		})
+		closeErr := file.Close()
+		if putErr != nil {
+			return putErr
 		}
 
-		return nil
+		return closeErr
 	}); err != nil {
 		t.Fatal(err)
 	}
