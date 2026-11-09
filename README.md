@@ -1,13 +1,12 @@
-[![golangci-lint Actions Status](https://github.com/lindenlab/caddy-s3-proxy/workflows/golangci-lint/badge.svg)](https://github.com/lindenlab/caddy-s3-proxy/actions)
-[![Test Actions Status](https://github.com/lindenlab/caddy-s3-proxy/workflows/Test/badge.svg)](https://github.com/lindenlab/caddy-s3-proxy/actions)
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors)
+[![golangci-lint Actions Status](https://github.com/scaleoutsean/caddy-s3-proxy/workflows/golangci-lint/badge.svg)](https://github.com/scaleoutsean/caddy-s3-proxy/actions)
+[![Test Actions Status](https://github.com/scaleoutsean/caddy-s3-proxy/workflows/Test/badge.svg)](https://github.com/scaleoutsean/caddy-s3-proxy/actions)
 
 # caddy-s3-proxy
 
 caddy-s3-proxy allows you to proxy requests directly from S3.
 
 S3 does have the website option, in which case, a normal reverse proxy could be used to display S3 data.
-However, it is sometimes inconvient to do that.  This module lets you access S3 data even if website access
+However, it is sometimes inconvenient to do that.  This module lets you access S3 data even if website access
 is not configured on your bucket.
 
 ## Making a version of caddy with this plugin
@@ -79,25 +78,24 @@ https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html
 
 ## Works with localstack!
 
-The s3 proxy works great with localstack for local testing.  Just set the endpoint directive to your localstack
-instance.  You will also want to set the `force_path_style` directive as well since localstack currently does not
-support virtual style addressing.  In fact, all of our examples use localstack - check out the examples directory.
+The s3 proxy works great with the Versity S3 Gateway for local testing.  Just set the endpoint directive to your VGW instance.  You will also want to set the `force_path_style` directive as well since VGW currently does not support virtual style addressing.  The examples still use localstack.
 
 ## Handling errors
 
-When accessing S3 you may get errors like keyNotFound, bucket does not exist, or ACL permissions problems.  By default
-this proxy will map those errors to an http error - like 404, 403 or 500.
+When accessing S3 you may get errors like keyNotFound, bucket does not exist, or ACL permissions problems.  By default, this proxy will map those errors to an http error - like 404, 403 or 500.
 
-However, with the `errors` directive you have a couple of more options.  You can specify a S3 key that may contain HTML
-to display rather than just returning an error code.  This can be done for a specific error or all errors.  For example,
-```
+However, with the `errors` directive you have a couple of more options.  You can specify a S3 key that may contain HTML to display rather than just returning an error code.  This can be done for a specific error or all errors.  For example,
+
+```sh
 errors 403 /key/path/to/permissionerr.html
 errors /key/path/to/defaulterr.html
 ```
+
 This will display the page permissionerr.html for any 403 errors and defaulterr.html for all other errors.
 
 There is a special option to "pass through" on an error and let the next Caddy handler deal with the request.  For example,
-```
+
+```sh
 errors 404 pass_through
 errors /key/path/to/defaulterr.html
 ```
@@ -114,22 +112,6 @@ Localstack contains a working version of S3 you can use for local development.
 Check out the examples [here](example/LOCALSTACK_EXAMPLE.md).
 You can also just run ```make example``` to build a docker image with the plugin and launch the compose example.
 
-# Contributors
+## Credits
 
-A big thank you to folks who have contributed to this project!
-
-<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
-<!-- prettier-ignore-start -->
-<!-- markdownlint-disable -->
-<table>
-  <tr>
-    <td align="center"><a href="https://github.com/rayjlinden"><img src="https://avatars0.githubusercontent.com/u/42587610?v=4" width="100px;" alt=""/><br /><sub><b>rayjlinden</b></sub></a></td>
-    <td align="center"><a href="https://github.com/gilbsgilbs"><img src="https://avatars2.githubusercontent.com/u/3407667?v=4" width="100px;" alt=""/><br /><sub><b>Gilbert Gilb's</b></sub></a></td>
-    <td align="center"><a href="https://github.com/christoph-kluge"><img src="https://avatars3.githubusercontent.com/u/1446269?v=4" width="100px;" alt=""/><br /><sub><b>Christoph Kluge</b></sub></a></td>
-  </tr>
-</table>
-
-<!-- markdownlint-enable -->
-<!-- prettier-ignore-end -->
-<!-- ALL-CONTRIBUTORS-LIST:END -->
-
+- Forked from [Lindenlab](https://github.com/lindenlab/caddy-s3-proxy/actions)
