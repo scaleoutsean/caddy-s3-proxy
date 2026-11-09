@@ -8,16 +8,21 @@ jobs:
         go-version: [1.27.3]
     runs-on: ubuntu-latest
     services:
-      localstack:
-        image: localstack/localstack:latest
+      vgw:
+        image: ghcr.io/versity/versitygw:latest
         ports:
           - 4566:4566
         env:
-          SERVICES: s3
+          VGW_BACKEND: posix
+          VGW_BACKEND_ARGS: /tmp/vgw-data
+          VGW_PORT: ":4566"
+          VGW_IAM_DIR: /tmp/vgw-iam
+          ROOT_ACCESS_KEY: dummy
+          ROOT_SECRET_KEY: dummy
     env:
       AWS_SECRET_ACCESS_KEY: dummy
       AWS_ACCESS_KEY_ID: dummy
-      AWS_REGION: dummy
+      AWS_REGION: us-east-1
       AWS_ENDPOINT: http://localhost:4566
     steps:
       - name: Install Go
