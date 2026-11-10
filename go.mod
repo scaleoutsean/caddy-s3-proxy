@@ -1,4 +1,4 @@
-module github.com/lindenlab/caddy-s3-proxy
+module github.com/scaleoutsean/caddy-s3-proxy
 
 go 1.27
 

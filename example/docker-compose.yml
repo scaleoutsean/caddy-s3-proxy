@@ -1,22 +1,32 @@
 
-version: '2.1'
-
 services:
-  localstack:
-    image: localstack/localstack
+  vgw:
+    image: ghcr.io/versity/versitygw:latest
     ports:
-      - "4566-4599:4566-4599"
+      - "${VGW_HOST_PORT:-4566}:4566"
     environment:
-      - SERVICES=s3
-      - DEBUG=1
+      VGW_BACKEND: posix
+      VGW_BACKEND_ARGS: /tmp/vgw-data
+      VGW_PORT: ":4566"
+      VGW_IAM_DIR: /tmp/vgw-iam
+      ROOT_ACCESS_KEY: dummy
+      ROOT_SECRET_KEY: dummy
     volumes:
-      - ./awslocal:/docker-entrypoint-initaws.d
+      - ./data:/tmp/vgw-data
+      - vgw-iam:/tmp/vgw-iam
   caddy:
     image: caddy
+    depends_on:
+      - vgw
+    environment:
+      AWS_ACCESS_KEY_ID: dummy
+      AWS_SECRET_ACCESS_KEY: dummy
+      AWS_REGION: us-east-1
     volumes:
-      - ./Caddyfile:/Caddyfile
+      - ./Caddyfile:/Caddyfile:ro
     ports:
-      - "80:80"
-    links:
-      - localstack
-    command: caddy  run --config /Caddyfile
+      - "${CADDY_HOST_PORT:-80}:80"
+    command: caddy run --config /Caddyfile
+
+volumes:
+  vgw-iam:

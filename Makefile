@@ -2,10 +2,10 @@ export GO111MODULE=on
 VERSION := $(shell cat Version)
 COVER_TARGET ?= 30
 
-# Set for running tests against localstack
+# Set for running tests against VGW
 export AWS_SECRET_ACCESS_KEY=dummy
 export AWS_ACCESS_KEY_ID=dummy
-export AWS_REGION=dummy
+export AWS_REGION=us-east-1
 export AWS_ENDPOINT=http://localhost:4566
 
 .PHONY: build
@@ -34,13 +34,13 @@ cover:  ## Generate test coverage results
 lint:  ## Run golint on source base
 	@golangci-lint run ./...
 
-.PHONY: localstack
-localstack:  ## Launch localstack to run tests against
-	@docker-compose -f example/docker-compose.yml up -d localstack
+.PHONY: vgw
+vgw:  ## Launch VGW to run tests against
+	@docker compose -f example/docker-compose.yml up -d vgw
 
 .PHONY: example
 example: docker  ## Run docker-compose up in the example directory
-	@docker-compose -f example/docker-compose.yml up
+	@docker compose -f example/docker-compose.yml up
 
 .DEFAULT_GOAL := help
 .PHONY: help

@@ -76,9 +76,9 @@ The methods include (and are looked for in this order):
 For much more detail on the various options for setting AWS credentials see here:
 https://docs.aws.amazon.com/sdk-for-go/v1/developer-guide/configuring-sdk.html
 
-## Works with localstack!
+## Works with Versity S3 Gateway
 
-The s3 proxy works great with the Versity S3 Gateway for local testing.  Just set the endpoint directive to your VGW instance.  You will also want to set the `force_path_style` directive as well since VGW currently does not support virtual style addressing.  The examples still use localstack.
+The S3 proxy works with Versity S3 Gateway (VGW) for local testing. Set the endpoint directive to your VGW instance and enable `force_path_style`. See the [VGW Compose example](example/VGW_EXAMPLE.md) for a runnable setup.
 
 ## Handling errors
 
@@ -114,4 +114,4 @@ You can also just run ```make example``` to build a docker image with the plugin
 
 ## Credits
 
-- Forked from [Lindenlab](https://github.com/lindenlab/caddy-s3-proxy/actions)
+- Maintained at [scaleoutsean/caddy-s3-proxy](https://github.com/scaleoutsean/caddy-s3-proxy)
