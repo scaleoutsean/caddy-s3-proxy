@@ -1,0 +1,7 @@
+FROM debian:13-slim
+
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
+COPY ./root-ca.crt /etc/ssl/certs/datafabric_ca.crt
+RUN update-ca-certificates
+COPY caddy /usr/bin/caddy

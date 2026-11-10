@@ -1,3 +1,3 @@
-FROM debian:buster-slim
+FROM debian:13-slim
 
 COPY caddy /usr/bin/caddy
