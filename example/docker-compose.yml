@@ -15,7 +15,8 @@ services:
       - ./data:/tmp/vgw-data
       - vgw-iam:/tmp/vgw-iam
   caddy:
-    image: caddy
+    # image: caddy
+    image: ghcr.io/scaleoutsean/caddy-s3-proxy:latest
     depends_on:
       - vgw
     environment:

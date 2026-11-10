@@ -122,4 +122,6 @@ You can also just run ```make example``` to build a docker image with the plugin
 
 ## Credits
 
-- Maintained at [scaleoutsean/caddy-s3-proxy](https://github.com/scaleoutsean/caddy-s3-proxy)
+- Original author: https://github.com/lindenlab/caddy-s3-proxy
+
+This fork is maintained for personal use at [scaleoutsean/caddy-s3-proxy](https://github.com/scaleoutsean/caddy-s3-proxy).
