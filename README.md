@@ -24,6 +24,14 @@ make build
 
 You can run ```make docker``` do build a local image you can test with.
 
+## Publishing to GHCR
+
+Pushing a version tag such as `v0.6.0` publishes the Docker image to `ghcr.io/scaleoutsean/caddy-s3-proxy`, tagged `0.6.0`, `0.6`, `0`, and `latest`. Make the GHCR package public once in its package settings to allow anonymous pulls, for example:
+
+```sh
+docker pull ghcr.io/scaleoutsean/caddy-s3-proxy:0.6.0
+```
+
 ## Configuration
 The Caddyfile directive would look something like this:
 ```
