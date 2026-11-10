@@ -11,6 +11,7 @@ services:
       VGW_IAM_DIR: /tmp/vgw-iam
       ROOT_ACCESS_KEY: dummy
       ROOT_SECRET_KEY: dummy
+      # SSL_CERT_FILE: /etc/ssl/certs/datafabric_ca.crt
     volumes:
       - ./data:/tmp/vgw-data
       - vgw-iam:/tmp/vgw-iam

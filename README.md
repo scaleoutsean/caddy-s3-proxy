@@ -54,7 +54,7 @@ The Caddyfile directive would look something like this:
 |  option   |  type  |  required | default | help |
 |-----------|:------:|-----------|---------|------|
 | bucket              | string   | yes |                          | S3 bucket name |
-| region              | string   | yes-ish  |  env AWS_REGION          | S3 region - if not give in the Caddyfile then AWS_REGION env var must be set.|
+| region              | string   | no  |  us-east-1 | Region for signing S3 requests.|
 | profile             | string   | no  |  empty string            | AWS profile if using shared credentials files. |
 | endpoint            | string   | no  |  aws default             | S3 hostname |
 | index               | string[] | no  |  [index.html, index.txt] | Index files to look up for dir path |
@@ -65,6 +65,8 @@ The Caddyfile directive would look something like this:
 | use_accelerate      | bool     | no  | false   | Set this to `true` to enable S3 Accelerate feature |
 | errors              | [int, ] string | no |  | Custom error page or use "pass_through" to write nothing for errors. |
 | browse              | [string] | no |  | Turns on a directory view for partial keys, an optional path to a template can be given |
+
+Region precedence is: `region` in the Caddyfile, `AWS_REGION`, the selected AWS shared-config profile's region, then `us-east-1` if none of those are set.
 
 ## Credentials
 

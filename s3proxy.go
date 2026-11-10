@@ -25,6 +25,8 @@ import (
 
 var defaultIndexNames = []string{"index.html", "index.txt"}
 
+const defaultRegion = "us-east-1"
+
 func init() {
 	caddy.RegisterModule(S3Proxy{})
 }
@@ -153,6 +155,8 @@ func (p *S3Proxy) Provision(ctx caddy.Context) (err error) {
 		)
 		return err
 	}
+	sess.Config.Region = regionOrDefault(sess.Config.Region)
+	p.Region = aws.StringValue(sess.Config.Region)
 
 	// Create S3 service client
 	p.client = s3.New(sess)
@@ -170,6 +174,13 @@ func (p *S3Proxy) Provision(ctx caddy.Context) (err error) {
 	)
 
 	return nil
+}
+
+func regionOrDefault(region *string) *string {
+	if aws.StringValue(region) == "" {
+		return aws.String(defaultRegion)
+	}
+	return region
 }
 
 func (p S3Proxy) getS3Object(bucket string, path string, headers http.Header) (*s3.GetObjectOutput, error) {

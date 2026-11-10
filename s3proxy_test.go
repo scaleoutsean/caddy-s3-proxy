@@ -32,6 +32,25 @@ type jTestCase struct {
 	expected string
 }
 
+func TestRegionOrDefault(t *testing.T) {
+	tests := []struct {
+		name     string
+		region   *string
+		expected string
+	}{
+		{name: "defaults when unset", expected: defaultRegion},
+		{name: "keeps configured region", region: aws.String("ca-central-1"), expected: "ca-central-1"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := aws.StringValue(regionOrDefault(test.region)); got != test.expected {
+				t.Errorf("regionOrDefault() = %q, want %q", got, test.expected)
+			}
+		})
+	}
+}
+
 func TestJoinPath(t *testing.T) {
 	testCases := []jTestCase{
 		jTestCase{
