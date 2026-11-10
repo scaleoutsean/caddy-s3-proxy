@@ -10,7 +10,24 @@ permissions:
   packages: write
 
 jobs:
+  vulncheck:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Check for known vulnerabilities
+        run: go run golang.org/x/vuln/cmd/govulncheck@latest ./...
+
   publish:
+    needs: vulncheck
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
