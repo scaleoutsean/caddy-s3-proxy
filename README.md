@@ -116,11 +116,11 @@ Note: The `errors` direction only applies to GET method requests.  PUT and DELET
 
 ## Examples you can play with
 
-In the examples directory is an example of using the s3proxy with localstack.
-Localstack contains a working version of S3 you can use for local development.
+In the example directory is an example of using the s3proxy with the [Versity S3 Gateway](https://github.com/versity/versitygw).
 
-Check out the examples [here](example/LOCALSTACK_EXAMPLE.md).
-You can also just run ```make example``` to build a docker image with the plugin and launch the compose example.
+The compose contains a working version of S3 you can use for local development. Check out the example [here](example/VGW_EXAMPLE.md). You can also just run `make example` to build and start a docker image with the plugin and launch the compose example.
+
+`example/Caddyfile-local` is a simple example for use with local CA.
 
 ## Credits
 

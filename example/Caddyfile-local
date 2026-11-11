@@ -3,17 +3,14 @@
 	debug
 	auto_https disable_redirects
 }
-dt.example.lan:8443 dt:8443 {
-	# using Local CA-issued certs, accessed at https://dt:8443
-    tls /home/sean/.step/certs/dt.crt /home/sean/.step/certs/dt.key
+
+# change this to name from TLS certificate 
+<caddy-host>:8443 {
+	# using Local CA-issued certs
+    tls <path-to-tls-certificate> <path-to-tls-certificate-private-key>
 	log {
         output stdout
         format json
-    }
-    # Serve the uniquely-named sitemap from disk
-    handle /sitemap.xml {
-        root * /var/lib/sitemaps
-        file_server
     }
 
     # Everything else from S3 snapshot bucket 
@@ -22,10 +19,10 @@ dt.example.lan:8443 dt:8443 {
             s3proxy {
                 # Alternatively, configure a profile and mount its AWS credentials file.
                 # profile <aws-profile>
-                bucket <your-bucket-name>
-                # change if you have a different one
+                bucket <your-s3-bucket-name>
+                # change region if you have a different one
                 region us-east-1
-                # your external firewall that NATs to StorageGRID LB with valid TLS 
+                # your external firewall that NATs to VGW or StorageGRID LB with valid TLS cert
                 endpoint https://<your-s3-api-endpoint>:<port>
                 force_path_style
                 # index index.html    # optional
