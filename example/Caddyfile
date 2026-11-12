@@ -11,12 +11,12 @@
 	# Example using strip prefix
 	route /dev/testing/coverage-reports/* {
 		uri strip_prefix /dev/testing/coverage-reports
-                s3proxy {
-						region "us-east-1"
-                        bucket "test-results"
-						endpoint "http://vgw:4566/"
+		s3proxy {
+			region "us-east-1"
+			bucket "test-results"
+			endpoint "http://vgw:4566/"
 			force_path_style
-                }
+		}
 	}
 
 	route /animals/* {
@@ -24,20 +24,20 @@
 		# in the same route to limit the scope of the root.
 		# Especially important if also doing a file server.
 		root * /a/long/path/we/have/for
-                s3proxy {
-						region "us-east-1"
-                        bucket "bkt"
-						endpoint "http://vgw:4566/"
+		s3proxy {
+			region "us-east-1"
+			bucket "bkt"
+			endpoint "http://vgw:4566/"
 			enable_put
 			enable_delete
 			browse
 			force_path_style
-                }
+		}
 	}
 
 	# To have the s3prox without the route directive you
 	# need to set the order which we do at the top of this file.
-        s3proxy /* {
+	s3proxy /* {
 		region "us-east-1"
 		bucket "my-bucket"
 		index index.html
@@ -45,4 +45,3 @@
 		force_path_style
 	}
 }
-

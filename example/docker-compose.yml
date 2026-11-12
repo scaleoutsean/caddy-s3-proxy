@@ -16,6 +16,7 @@ services:
       - ./data:/tmp/vgw-data
       - vgw-iam:/tmp/vgw-iam
   caddy:
+    # If you build your own image, uncomment the following line and comment the next one
     # image: caddy
     image: ghcr.io/scaleoutsean/caddy-s3-proxy:latest
     depends_on:
@@ -26,6 +27,8 @@ services:
       AWS_REGION: us-east-1
     volumes:
       - ./Caddyfile:/Caddyfile:ro
+      # Suggested: create ./data and mount it to /data for XDG_DATA_HOME
+      # - ./data:/data:rw
     ports:
       - "${CADDY_HOST_PORT:-80}:80"
     command: caddy run --config /Caddyfile

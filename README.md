@@ -74,9 +74,9 @@ This module uses the default providor chain to get credentials for access to S3.
 secure options to provide credentials for accessing S3 without putting the credentials in the Caddyfile.
 The methods include (and are looked for in this order):
 
-1) Environment variables.  I.e. AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY
+1) Environment variables, i.e. `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 
-2) Shared credentials file.  (Located at ~/.aws/credentials)
+2) Shared credentials file, by default located at `~/.aws/credentials`
    (You may pass the optional profile directive to select specific credentials.)
 
 3) If your application uses an ECS task definition or RunTask API operation, IAM role for tasks.
@@ -120,7 +120,7 @@ In the example directory is an example of using the s3proxy with the [Versity S3
 
 The compose contains a working version of S3 you can use for local development. Check out the example [here](example/VGW_EXAMPLE.md). You can also just run `make example` to build and start a docker image with the plugin and launch the compose example.
 
-`example/Caddyfile-local` is a simple example for use with local CA.
+`example/Caddyfile-local` is a simple example for use with local CA-issued TLS certificate.
 
 ## Credits
 

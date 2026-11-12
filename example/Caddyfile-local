@@ -6,7 +6,7 @@
 
 # change this to name from TLS certificate 
 <caddy-host>:8443 {
-	# using Local CA-issued certs
+	# using Local CA-issued cert
     tls <path-to-tls-certificate> <path-to-tls-certificate-private-key>
 	log {
         output stdout
