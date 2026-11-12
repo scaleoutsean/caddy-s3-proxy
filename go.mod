@@ -1,6 +1,6 @@
 module github.com/scaleoutsean/caddy-s3-proxy
 
-go 1.27
+go 1.27.4
 
 require (
 	github.com/aws/aws-sdk-go v1.55.7
