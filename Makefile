@@ -17,7 +17,7 @@ caddy: *.go go.mod Makefile
 
 .PHONY: docker
 docker: caddy  ## build a docker image for caddy with the s3proxy
-	@docker build -t caddy .
+	@docker build -t caddy-s3-proxy:local .
 
 .PHONY: test
 test:  ## Run go test on source base

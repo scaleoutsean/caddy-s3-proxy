@@ -59,6 +59,7 @@ The Caddyfile directive would look something like this:
 | endpoint            | string   | no  |  aws default             | S3 hostname |
 | index               | string[] | no  |  [index.html, index.txt] | Index files to look up for dir path |
 | root                | string   | no  |    | Set a "prefix" to be added to key |
+| hide                | string[] | no  |    | Hide matching key paths from GET, HEAD, and directory listings. |
 | enable_put          | bool     | no  | false   | Allow PUT method to be sent through proxy |
 | enable_delete       | bool     | no  | false   | Allow DELETE method to be sent through proxy |
 | force_path_style    | bool     | no  | false   | Set this to `true` to force S3 request to use path-style addressing |
@@ -67,6 +68,70 @@ The Caddyfile directive would look something like this:
 | browse              | [string] | no |  | Turns on a directory view for partial keys, an optional path to a template can be given |
 
 Region precedence is: `region` in the Caddyfile, `AWS_REGION`, the selected AWS shared-config profile's region, then `us-east-1` if none of those are set.
+
+## Directory Browsing
+
+Directory browsing is **off by default**. Enable `browse` only on routes where
+listing object names is intended. Requests whose paths end in `/` show a
+directory listing when no configured index file is found; existing index files
+and object downloads retain their normal behavior.
+
+```caddyfile
+s3proxy {
+	bucket my-bucket
+	root public
+	browse
+	hide private secret.txt
+}
+```
+
+The default HTML view is script-free and includes breadcrumbs, parent navigation,
+folders first, object sizes and modification times, and a next-page link.
+Links support ordinary Tab/Enter keyboard navigation. It loads no external fonts,
+scripts, or images. Backend root prefixes are not displayed in HTML; hidden entries,
+directory-marker objects, and keys outside the requested prefix are excluded.
+
+Listings request **100 entries per page** by default. Use `?max=20` to request a
+different page size, up to S3's limit of 1,000; invalid values use the default.
+Hidden entries can make a page shorter or empty. If there is a next-page link,
+it remains available even on an empty page. Browsing never recursively lists the
+bucket or fetches all pages, and the entry count describes visible entries on the
+current page, not the bucket total.
+
+Representation selection, in order:
+
+- `?format=html` or `?format=json` explicitly selects a representation.
+- Otherwise, `Accept` negotiates HTML or JSON, respecting quality weights and
+  exclusions. Absent or wildcard preferences default to HTML; equally specific,
+  equally weighted preferences also favor HTML. Unsupported preferences return 406.
+- For compatibility, a request `Content-Type: application/json` selects JSON
+  only when neither a format nor an `Accept` preference is supplied. New clients
+  should use `Accept: application/json` or `?format=json` instead.
+
+An unsupported nonempty `format` returns 400. Folder, breadcrumb, and next-page
+links preserve explicit format and page-size choices; object links remain normal
+download links. JSON retains the `count`, `items`, and `more` fields; empty
+listings use `items: []`. Item `key` values remain full backend object keys, so
+JSON access also exposes the configured root prefix. HEAD uses the same
+representation and security headers without fetching a listing or sending a body.
+
+Listing responses use `Cache-Control: private, no-store`, `Vary: Accept, Content-Type`,
+and `X-Content-Type-Options: nosniff`. The built-in HTML template also applies a
+Content Security Policy that blocks scripts, external resources, and framing.
+An existing operator-supplied Content Security Policy is preserved.
+An optional `browse /path/to/template.html` still uses a custom Go HTML template,
+with `.Items`, `.Count`, `.MoreLink`, `.Path`, `.ParentLink`, and `.Breadcrumbs`;
+the built-in template's CSP is not imposed on custom templates.
+
+**Security:** browsing uses the proxy's S3 credentials, not the visitor's identity.
+Protect the route with suitable authentication and authorization, and grant
+`ListBucket` only for intended prefixes. `root` and `hide` are not substitutes for
+backend IAM policy. The explorer has no mutation controls, but enabling `browse`
+does not override `enable_put` or `enable_delete`. For a read-only deployment,
+leave those options disabled and use read-only backend credentials. Directory
+markers and dot-segment keys are omitted because they cannot be safely represented
+as child navigation links. For stripped-prefix routes, breadcrumbs stay under the
+visible mount; unrelated URL rewrites omit parent navigation.
 
 ## Credentials
 

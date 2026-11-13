@@ -75,7 +75,11 @@ func (p S3Proxy) HeadHandler(w http.ResponseWriter, r *http.Request, fullPath st
 		if p.EnableBrowse {
 			// A browsable directory exists, so the resource is a 200 — but a
 			// HEAD response must carry no body, so the listing is not rendered.
-			w.Header().Set("Content-Type", "text/html; charset=utf-8")
+			format, err := browseFormat(r)
+			if err != nil {
+				return err
+			}
+			setBrowseHeaders(w, format, p.BrowseTemplate == "")
 			return nil
 		}
 		return caddyhttp.Error(http.StatusForbidden, errors.New("can not view a directory"))

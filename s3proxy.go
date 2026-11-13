@@ -294,10 +294,14 @@ func (p S3Proxy) DeleteHandler(w http.ResponseWriter, r *http.Request, key strin
 }
 
 func (p S3Proxy) BrowseHandler(w http.ResponseWriter, r *http.Request, key string) error {
+	format, err := browseFormat(r)
+	if err != nil {
+		return err
+	}
 
 	input := p.ConstructListObjInput(r, key)
 
-	result, err := p.client.ListObjectsV2(&input)
+	result, err := p.client.ListObjectsV2WithContext(r.Context(), &input)
 	if err != nil {
 		p.log.Debug("error in ListObjectsV2",
 			zap.String("bucket", p.Bucket),
@@ -307,9 +311,13 @@ func (p S3Proxy) BrowseHandler(w http.ResponseWriter, r *http.Request, key strin
 		return convertToCaddyError(err)
 	}
 
+	result.Prefix = input.Prefix
+	result.MaxKeys = input.MaxKeys
 	pageObj := p.MakePageObj(result)
+	pageObj.setNavigation(r)
+	setBrowseHeaders(w, format, p.BrowseTemplate == "")
 
-	if r.Header.Get("Content-type") == "application/json" {
+	if format == "json" {
 		// Give JSON output of dir
 		err = pageObj.GenerateJson(w)
 	} else {

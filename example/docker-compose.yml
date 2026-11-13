@@ -17,7 +17,7 @@ services:
       - vgw-iam:/tmp/vgw-iam
   caddy:
     # If you build your own image, uncomment the following line and comment the next one
-    # image: caddy
+    # image: caddy-s3-proxy:local
     image: ghcr.io/scaleoutsean/caddy-s3-proxy:latest
     depends_on:
       - vgw
